@@ -121,6 +121,32 @@ void ExceptionHandler(ExceptionType which) {
                     return;
                     ASSERTNOTREACHED();
                     break;
+                // case SC_Read:
+                //     break;
+                // case SC_Write:
+                //     break;
+                // case SC_Seek:
+                //     break;
+                case SC_Close:
+                    fileID = kernel->machine->ReadRegister(4);
+                    {
+                        status = SysClose(fileID);
+                        kernel->machine->WriteRegister(2, status);
+                    }
+                    /* Modify return point */
+                    {
+                        /* set previous programm counter (debugging only)*/
+                        kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+                        /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+                        kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+
+                        /* set next programm counter for branch execution */
+                        kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+                    }
+                    return;
+                    ASSERTNOTREACHED();
+                    break;
                 case SC_Add:
                     DEBUG(dbgSys, "Add " << kernel->machine->ReadRegister(4) << " + " << kernel->machine->ReadRegister(5) << "\n");
                     /* Process SysAdd Systemcall*/

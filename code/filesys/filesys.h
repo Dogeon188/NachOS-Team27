@@ -84,8 +84,15 @@ class FileSystem {
     // }
     // int ReadFile(char *buffer, int size, OpenFileId id) {
     // }
-    // int CloseFile(OpenFileId id) {
-    // }
+    int CloseFile(OpenFileId id) {
+        if (id < 0 || id >= MAX_FILE)
+            return -1;
+        if (OpenFileTable[id] == NULL)
+            return -1;
+        delete OpenFileTable[id];
+        OpenFileTable[id] = NULL;
+        return 1;
+    }
 
     bool Remove(char *name) { return Unlink(name) == 0; }
 

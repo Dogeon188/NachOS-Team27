@@ -41,4 +41,8 @@ OpenFileId SysOpen(char *name) {
     return kernel->fileSystem->OpenAFile(name);
 }
 
+int SysClose(OpenFileId id) {
+    return kernel->fileSystem->CloseFile(id);
+}
+
 #endif /* ! __USERPROG_KSYSCALL_H__ */

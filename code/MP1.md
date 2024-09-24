@@ -36,18 +36,22 @@
 ### II.1 Open File
 
 [Open()](test/start.S#L127)  
-[ExceptionHandler()](userprog/exception.cc#L103)  
+[ExceptionHandler()](userprog/exception.cc#L50)  
 [SysOpen()](userprog/ksyscall.h#L40)  
 [FileSystem::OpenAFile()](filesys/filesys.cc#L191)  
 
 ### II.2 Write File
 [Write()](test/start.S#L143)  
+[ExceptionHandler()](userprog/exception.cc#L50)  
 ...
 
 ### II.3 Read File
 [Read()](test/start.S#L135)  
+[ExceptionHandler()](userprog/exception.cc#L50)  
 ...
 
 ### II.4 Close File
 [Close()](test/start.S#L159)  
-...
+[ExceptionHandler()](userprog/exception.cc#L50)  
+[SysClose()](userprog/ksyscall.h#L44)  
+[FileSystem::CloseFile()](filesys/filesys.h#L87)  
