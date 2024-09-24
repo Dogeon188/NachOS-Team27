@@ -354,7 +354,7 @@ depend: $(CFILES) $(HFILES)
 	@echo '# see make depend above' >> Makefile.dep
 
 clean:
-	$(RM) -f $(OFILES)
+	$(RM) -f $(OFILES) $(PROGRAM)
 
 distclean: clean
 	$(RM) -f $(PROGRAM)

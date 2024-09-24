@@ -230,7 +230,11 @@ hw4t2: hw4t2.o start.o
 	$(LD) $(LDFLAGS) start.o hw4t2.o -o hw4t2.coff
 	$(COFF2NOFF) hw4t2.coff hw4t2
 
-clean:
+cleandisk:
+	$(RM) -f DISK_*
+	$(RM) -f --force SOCKET_*
+
+clean: cleandisk
 	$(RM) -f *.o *.ii
 	$(RM) -f *.coff
 

@@ -114,6 +114,15 @@ Create:
 	j	$31
 	.end Create
 
+
+	.globl Open
+	.ent	Open
+Open:
+	addiu $2,$0,SC_Open
+	syscall
+	j	$31
+	.end Open
+
 	.globl Remove
 	.ent	Remove
 Remove:

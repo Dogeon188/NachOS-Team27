@@ -43,10 +43,12 @@
                      // implementation is available
 typedef int OpenFileId;
 
+#define MAX_FILE 20
+
 class FileSystem {
    public:
     FileSystem() {
-        for (int i = 0; i < 20; i++) OpenFileTable[i] = NULL;
+        for (int i = 0; i < MAX_FILE; i++) OpenFileTable[i] = NULL;
     }
 
     bool Create(char *name) {
@@ -66,19 +68,28 @@ class FileSystem {
     }
 
     //  The OpenAFile function is used for kernel open system call
-    /*  OpenFileId OpenAFile(char *name) {
+    OpenFileId OpenAFile(char *name) {
+        for (int i = 0; i < MAX_FILE; i++) {
+            if (OpenFileTable[i] == NULL) {
+                OpenFile *fileptr = Open(name);
+                if (fileptr == NULL)
+                    return -1;
+                OpenFileTable[i] = fileptr;
+                return i;
+            }
         }
-        int WriteFile(char *buffer, int size, OpenFileId id){
-        }
-        int ReadFile(char *buffer, int size, OpenFileId id){
-        }
-        int CloseFile(OpenFileId id){
-        }
-    */
+        return -1;
+    }
+    // int WriteFile(char *buffer, int size, OpenFileId id) {
+    // }
+    // int ReadFile(char *buffer, int size, OpenFileId id) {
+    // }
+    // int CloseFile(OpenFileId id) {
+    // }
 
     bool Remove(char *name) { return Unlink(name) == 0; }
 
-    OpenFile *OpenFileTable[20];
+    OpenFile *OpenFileTable[MAX_FILE];
 };
 
 #else  // FILESYS
