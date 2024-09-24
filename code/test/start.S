@@ -114,6 +114,13 @@ Create:
 	j	$31
 	.end Create
 
+	.globl Remove
+	.ent	Remove
+Remove:
+	addiu $2,$0,SC_Remove
+	syscall
+	j	$31
+	.end Remove
 
 	.globl Open
 	.ent	Open
@@ -123,13 +130,21 @@ Open:
 	j	$31
 	.end Open
 
-	.globl Remove
-	.ent	Remove
-Remove:
-	addiu $2,$0,SC_Remove
+	.globl Read
+	.ent	Read
+Read:
+	addiu $2,$0,SC_Read
 	syscall
 	j	$31
-	.end Remove
+	.end Read
+	
+	.globl Write
+	.ent	Write
+Write:
+	addiu $2,$0,SC_Write
+	syscall
+	j	$31
+	.end Write
 
 	.globl Seek
 	.ent	Seek
@@ -138,6 +153,14 @@ Seek:
 	syscall
 	j	$31
 	.end Seek
+
+	.globl Close
+	.ent	Close
+Close:
+	addiu $2,$0,SC_Close
+	syscall
+	j	$31
+	.end Close
 
         .globl ThreadFork
         .ent    ThreadFork
