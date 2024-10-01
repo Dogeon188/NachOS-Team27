@@ -12,9 +12,9 @@ int main(void) {
     if (fid < 0)
         MSG("Failed on opening file");
 
-    // fid = Open("file1.test");
-    // if (fid < 0)
-    //     MSG("Failed on opening duplicate file");
+    fid = Open("file1.test");
+    if (fid < 0)
+        MSG("Failed on opening duplicate file");  // should success
 
     // for (i = 0; i < 26; ++i) {
     //     int count = Write(test + i, 1, fid);
