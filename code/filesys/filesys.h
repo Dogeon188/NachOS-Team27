@@ -80,10 +80,18 @@ class FileSystem {
         }
         return -1;
     }
-    // int WriteFile(char *buffer, int size, OpenFileId id) {
-    // }
-    // int ReadFile(char *buffer, int size, OpenFileId id) {
-    // }
+    int WriteFile(char *buffer, int size, OpenFileId id) {
+        if (OpenFileTable[id] == NULL)
+            return -1;
+        int numWrite = OpenFileTable[id]->Write(buffer, size);
+        return numWrite;
+    }
+    int ReadFile(char *buffer, int size, OpenFileId id) {
+        if (OpenFileTable[id] == NULL)
+            return -1;
+        int numRead = OpenFileTable[id]->Read(buffer, size);
+        return numRead;
+    }
     int CloseFile(OpenFileId id) {
         if (id < 0 || id >= MAX_FILE)
             return -1;

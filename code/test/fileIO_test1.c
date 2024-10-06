@@ -12,11 +12,11 @@ int main(void) {
     if (fid < 0)
         MSG("Failed on opening file");
 
-    // for (i = 0; i < 26; ++i) {
-    //     int count = Write(test + i, 1, fid);
-    //     if (count != 1)
-    //         MSG("Failed on writing file");
-    // }
+    for (i = 0; i < 26; ++i) {
+        int count = Write(test + i, 1, fid);
+        if (count != 1)
+            MSG("Failed on writing file");
+    }
 
     success = Close(fid);
     if (success != 1)

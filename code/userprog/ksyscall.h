@@ -45,4 +45,11 @@ int SysClose(OpenFileId id) {
     return kernel->fileSystem->CloseFile(id);
 }
 
+int SysRead(char *buffer, int size, OpenFileId id) {
+    return kernel->fileSystem->ReadFile(buffer, size, id);
+}
+int SysWrite(char* buffer, int size, OpenFileId id) {
+    return kernel->fileSystem->WriteFile(buffer, size, id);
+}
+
 #endif /* ! __USERPROG_KSYSCALL_H__ */
