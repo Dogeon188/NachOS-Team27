@@ -43,12 +43,13 @@
                      // implementation is available
 typedef int OpenFileId;
 
-#define MAX_FILE 20
+#define MAX_FILE_COUNT 20
 
 class FileSystem {
    public:
     FileSystem() {
-        for (int i = 0; i < MAX_FILE; i++) OpenFileTable[i] = NULL;
+        for (int i = 0; i < MAX_FILE_COUNT; i++) OpenFileTable[i] = NULL;
+        openedFileCount = 0;
     }
 
     bool Create(char *name) {
@@ -69,16 +70,37 @@ class FileSystem {
 
     //  The OpenAFile function is used for kernel open system call
     OpenFileId OpenAFile(char *name) {
-        for (int i = 0; i < MAX_FILE; i++) {
-            if (OpenFileTable[i] == NULL) {
-                OpenFile *fileptr = Open(name);
-                if (fileptr == NULL)
-                    return -1;
-                OpenFileTable[i] = fileptr;
-                return i;
-            }
+        OpenFileId idx;
+
+        DEBUG(dbgTraCode, "In FileSystem::OpenAFile(), opening file: " << name);
+        if (openedFileCount >= MAX_FILE_COUNT) // exceed open file limit
+            return -1;
+            
+        // handle case of file already opened
+        // Seems no need to handle, according to TA
+        // for (idx = 0; idx < MAX_FILE_COUNT; idx++) {
+        //     if (fileNames[idx] != NULL && strcmp(fileNames[idx], name) == 0) {
+        //         DEBUG(dbgTraCode, "In FileSystem::OpenAFile(), file: " << name << " already opened, file id: " << idx);
+        //         return idx; // TODO return -1 or old file id?
+        //     }
+        // }
+
+        for (idx = 0; idx < MAX_FILE_COUNT; idx++) {
+            if (OpenFileTable[idx] == NULL)
+                break;
         }
-        return -1;
+
+        int fileDescriptor = OpenForReadWrite(name, FALSE);
+        if (fileDescriptor == -1)
+            return -1;
+        OpenFileTable[idx] = new OpenFile(fileDescriptor);
+        // fileNames[idx] = new char[strlen(name) + 1]; // allocated, inefficient (!)
+        // strcpy(fileNames[idx], name);
+
+        DEBUG(dbgTraCode, "In FileSystem::OpenAFile(), opened file: " << name << " with file id: " << idx << ", fileDescriptor: " << fileDescriptor);
+
+        openedFileCount++;
+        return idx;
     }
     int WriteFile(char *buffer, int size, OpenFileId id) {
         if (OpenFileTable[id] == NULL)
@@ -93,18 +115,22 @@ class FileSystem {
         return numRead;
     }
     int CloseFile(OpenFileId id) {
-        if (id < 0 || id >= MAX_FILE)
+        if (id < 0 || id >= MAX_FILE_COUNT)
             return -1;
         if (OpenFileTable[id] == NULL)
             return -1;
-        delete OpenFileTable[id];
+        delete OpenFileTable[id]; // close file in destructor
         OpenFileTable[id] = NULL;
+        // delete fileNames[id];
+        openedFileCount--;
         return 1;
     }
 
     bool Remove(char *name) { return Unlink(name) == 0; }
 
-    OpenFile *OpenFileTable[MAX_FILE];
+    OpenFile *OpenFileTable[MAX_FILE_COUNT];
+    // char *fileNames[MAX_FILE_COUNT];
+    int openedFileCount;
 };
 
 #else  // FILESYS
