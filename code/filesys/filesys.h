@@ -121,6 +121,7 @@ class FileSystem {
         delete OpenFileTable[id]; // close file in destructor
         OpenFileTable[id] = NULL;
         delete fileNames[id];
+        fileNames[id] = NULL;
         openedFileCount--;
         return 1;
     }
