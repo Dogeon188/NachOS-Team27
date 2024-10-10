@@ -200,6 +200,12 @@ fileIO_test2: fileIO_test2.o start.o
 	$(LD) $(LDFLAGS) start.o fileIO_test2.o -o fileIO_test2.coff
 	$(COFF2NOFF) fileIO_test2.coff fileIO_test2
 
+dupe_open.o: dupe_open.c
+	$(CC) $(CFLAGS) -c dupe_open.c
+dupe_open: dupe_open.o start.o
+	$(LD) $(LDFLAGS) start.o dupe_open.o -o dupe_open.coff
+	$(COFF2NOFF) dupe_open.coff dupe_open
+
 hw3t1.o: hw3t1.c
 	$(CC) $(CFLAGS) -c hw3t1.c
 hw3t1: hw3t1.o start.o

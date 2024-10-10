@@ -77,13 +77,12 @@ class FileSystem {
             return -1;
             
         // handle case of file already opened
-        // Seems no need to handle, according to TA
-        // for (idx = 0; idx < MAX_FILE_COUNT; idx++) {
-        //     if (fileNames[idx] != NULL && strcmp(fileNames[idx], name) == 0) {
-        //         DEBUG(dbgTraCode, "In FileSystem::OpenAFile(), file: " << name << " already opened, file id: " << idx);
-        //         return idx; // TODO return -1 or old file id?
-        //     }
-        // }
+        for (idx = 0; idx < MAX_FILE_COUNT; idx++) {
+            if (fileNames[idx] != NULL && strcmp(fileNames[idx], name) == 0) {
+                DEBUG(dbgTraCode, "In FileSystem::OpenAFile(), file: " << name << " already opened, file id: " << idx);
+                return -1; // file already opened -> error
+            }
+        }
 
         for (idx = 0; idx < MAX_FILE_COUNT; idx++) {
             if (OpenFileTable[idx] == NULL)
@@ -94,8 +93,8 @@ class FileSystem {
         if (fileDescriptor == -1)
             return -1;
         OpenFileTable[idx] = new OpenFile(fileDescriptor);
-        // fileNames[idx] = new char[strlen(name) + 1]; // allocated, inefficient (!)
-        // strcpy(fileNames[idx], name);
+        fileNames[idx] = new char[strlen(name) + 1]; // allocated, inefficient (!)
+        strcpy(fileNames[idx], name);
 
         DEBUG(dbgTraCode, "In FileSystem::OpenAFile(), opened file: " << name << " with file id: " << idx << ", fileDescriptor: " << fileDescriptor);
 
@@ -121,7 +120,7 @@ class FileSystem {
             return -1;
         delete OpenFileTable[id]; // close file in destructor
         OpenFileTable[id] = NULL;
-        // delete fileNames[id];
+        delete fileNames[id];
         openedFileCount--;
         return 1;
     }
@@ -129,7 +128,7 @@ class FileSystem {
     bool Remove(char *name) { return Unlink(name) == 0; }
 
     OpenFile *OpenFileTable[MAX_FILE_COUNT];
-    // char *fileNames[MAX_FILE_COUNT];
+    char *fileNames[MAX_FILE_COUNT];
     int openedFileCount;
 };
 
